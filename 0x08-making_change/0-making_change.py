@@ -1,44 +1,33 @@
 #!/usr/bin/python3
 """
-Making Change
+Coin Change Algorithm
 """
-import sys
 
 
 def makeChange(coins, total):
-    """
-    Given a total a pile of coins of different totalalues,
-    determine the fewest number of coins needed to meet a
-    gitotalen amount total.
+    """Calculate the fewest number needed to meet,
+    needed to meet a given total amount.
+    Args:
+        coins ([list]): A list of coin values available.
+        total ([number]): The target amount
+    Return: The fewest number of coins needed to reach the total,
+    or -1 if not possible.
     """
     if total <= 0:
         return 0
-    res = minCoins(coins, len(coins), total)
-    if res == 0:
-        return -1
-    return res
 
+    coins.sort(reverse=True)
 
-def minCoins(coins, m, total):
-    """
-    find the minimum coins
-    """
-    table = [0 for i in range(total + 1)]
-    table[0] = 0
+    i, ncoins = (0, 0)
+    cpy_total = total
+    len_coins = len(coins)
 
-    for i in range(1, total + 1):
-        table[i] = sys.maxsize
+    while(i < len_coins and cpy_total > 0):
+        if (cpy_total - coins[i]) >= 0:
+            cpy_total -= coins[i]
+            ncoins += 1
+        else:
+            i += 1
 
-    for i in range(1, total + 1):
-
-        for j in range(m):
-            if (coins[j] <= i):
-                sub_res = table[i - coins[j]]
-                if (sub_res != sys.maxsize and
-                        sub_res + 1 < table[i]):
-                    table[i] = sub_res + 1
-
-    if table[total] == sys.maxsize:
-        return -1
-
-    return table[total]
+    check = cpy_total > 0 and ncoins > 0
+    return -1 if check or ncoins == 0 else ncoins
